@@ -11,84 +11,77 @@ namespace Enemy
         private Animator _anim;
         private Vector2 _scale;
 
-        private const float IDLE_STATE = 0;
-        private const float WALK_STATE = 1;
-        private const float REVERT_STATE = 2;
+        private const float IdleState = 0;
+        private const float WalkState = 1;
 
-        [Header("-= Debug Info =-")]
-        [SerializeField] private float _currentState;
-        [SerializeField] private float _currentTimeToRevert;
-        [SerializeField] private float _magnitude;
+        private float _currentState;
+        private float _currentTimeToRevert;
 
         private void Start()
         {
-            _currentState = WALK_STATE;
-            _currentTimeToRevert = 0;
-
             _rb = GetComponent<Rigidbody2D>();
             _anim = GetComponent<Animator>();
             _scale = transform.localScale;
+
+            _currentTimeToRevert = 0;
+            _currentState = WalkState;
+            Movement();
         }
 
         private void Update()
         {
+            CheckState();
+        }
+
+        private void CheckState()
+        {
             switch (_currentState)
             {
-                case IDLE_STATE:
+                case IdleState:
                     _currentTimeToRevert += Time.deltaTime;
-
                     if (_currentTimeToRevert >= _timeToRevert)
                     {
+                        TurnAxis();
+                        Movement();
+
                         _currentTimeToRevert = 0;
-                        _currentState = REVERT_STATE;
+                        _currentState = WalkState;
                     }
-
-                    _magnitude = 0f;
-
                     break;
-                case WALK_STATE:
-                    Vector2 _velocity = Vector2.right;
-                    if (_scale.x == -1)
-                    {
-                        _velocity = Vector2.left;
-                    }
-
-                    _rb.velocity = _velocity * _speed;
-                    _magnitude = _rb.velocity.magnitude;
-
-                    break;
-                case REVERT_STATE:
-                    _scale.x *= -1;
-                    transform.localScale = _scale;
-
-                    _currentState = WALK_STATE;
-                    _magnitude = 0f;
-
+                case WalkState:
+                    Movement();
                     break;
             }
+        }
 
-            _anim.SetFloat("Velocity", _magnitude);
+        private void Movement()
+        {
+            Vector2 _velocity = Vector2.right;
+            if (_scale.x == -1)
+            {
+                _velocity = Vector2.left;
+            }
+
+            _rb.velocity = _velocity * _speed;
+            _anim.SetFloat("Velocity", _rb.velocity.magnitude);
+        }
+        private void StopMoving()
+        {
+            _rb.velocity = Vector2.zero;
+            _anim.SetFloat("Velocity", _rb.velocity.magnitude);
+        }
+        private void TurnAxis()
+        {
+            _scale.x *= -1;
+            transform.localScale = _scale;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("EnemyStopper"))
             {
-                _currentState = IDLE_STATE;
-            }
-        }
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            if (other.CompareTag("EnemyStopper"))
-            {
-                _currentState = WALK_STATE;
-            }
-        }        
-        private void OnTriggerStay2D(Collider2D other)
-        {
-            if (other.CompareTag("EnemyStopper"))
-            {
-                // _currentState = IDLE_STATE;
+                _currentState = IdleState;
+                StopMoving();
             }
         }
     }
