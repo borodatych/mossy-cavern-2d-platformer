@@ -7,12 +7,14 @@ namespace Player
     [RequireComponent(typeof(Animator))]
     public class PlayerMovement : MonoBehaviour
     {
-        [Header("Movement Vars")] [SerializeField]
+        [Header("Movement Vars")]
+        [SerializeField]
         private float _speed = 3;
 
         [SerializeField] private float _jumpForce = 5;
 
-        [Header("Settings")] [SerializeField] private float _jumpOffset = 0.1f;
+        [Header("Settings")]
+        [SerializeField] private float _jumpOffset = 0.15f;
         [SerializeField] private AnimationCurve _animCurve;
         [SerializeField] private GameObject _groundCollider;
         [SerializeField] private GameObject _controlCollider;

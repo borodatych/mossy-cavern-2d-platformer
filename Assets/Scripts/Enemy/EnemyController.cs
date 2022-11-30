@@ -1,28 +1,47 @@
+using DG.Tweening;
 using UnityEngine;
 
 namespace Enemy
 {
     public class EnemyController : MonoBehaviour
     {
-        [SerializeField] private float _speed;
-        [SerializeField] private float _timeToRevert;
+        [Header("Enemy")]
+        [SerializeField] private GameObject _body;
+        [SerializeField] private GameObject _skin;
 
+        [Header("Movement Vars")]
+        [SerializeField] private float _speed = 1f;
+        [SerializeField] private float _timeToRevert = 3f;
+        [SerializeField] private float _jumpForce = 5;
+        [SerializeField] private float _jumpOffset = 0.15f;
+
+        private GameObject _collider;
         private Rigidbody2D _rb;
         private Animator _anim;
         private Vector2 _scale;
 
-        private const float IdleState = 0;
-        private const float WalkState = 1;
+        public const float IdleState = 0;
+        public const float WalkState = 1;
+        public const float StopState = 2;
 
-        private float _currentState;
+        private static float _currentState;
         private float _currentTimeToRevert;
+        
+        public static float CurrentState {
+            get => _currentState;
+            set => _currentState = value;
+            
+        }
 
+        private void Awake()
+        {
+            _rb = _body.GetComponent<Rigidbody2D>();
+            _anim = _skin.GetComponent<Animator>();
+            _scale = _skin.transform.localScale;
+            _collider = GameObject.Find("Body/Collider");
+        }
         private void Start()
         {
-            _rb = GetComponent<Rigidbody2D>();
-            _anim = GetComponent<Animator>();
-            _scale = transform.localScale;
-
             _currentTimeToRevert = 0;
             _currentState = WalkState;
             Movement();
@@ -41,15 +60,18 @@ namespace Enemy
                     _currentTimeToRevert += Time.deltaTime;
                     if (_currentTimeToRevert >= _timeToRevert)
                     {
-                        TurnAxis();
+                        FlipAxis();
                         Movement();
-
                         _currentTimeToRevert = 0;
                         _currentState = WalkState;
                     }
                     break;
                 case WalkState:
-                    Movement();
+                    // Movement();
+                    break;
+                case StopState:
+                    Stopping();
+                    _currentState = IdleState;
                     break;
             }
         }
@@ -64,25 +86,19 @@ namespace Enemy
 
             _rb.velocity = _velocity * _speed;
             _anim.SetFloat("Velocity", _rb.velocity.magnitude);
+            _anim.CrossFade("walk", 0f, 0, 1f);
         }
-        private void StopMoving()
+        private void Stopping()
         {
             _rb.velocity = Vector2.zero;
             _anim.SetFloat("Velocity", _rb.velocity.magnitude);
+            _anim.CrossFade("idle", 0f, 0, 1f);
         }
-        private void TurnAxis()
+        private void FlipAxis()
         {
             _scale.x *= -1;
-            transform.localScale = _scale;
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.CompareTag("EnemyStopper"))
-            {
-                _currentState = IdleState;
-                StopMoving();
-            }
+            _skin.transform.localScale = _scale;
+            _collider.transform.localScale = _scale;
         }
     }
 }

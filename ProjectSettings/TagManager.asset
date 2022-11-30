@@ -8,11 +8,12 @@ TagManager:
   - CameraConfiner
   - Bullet
   - EnemyStopper
+  - Ground
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - 
