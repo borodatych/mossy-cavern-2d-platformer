@@ -5,6 +5,7 @@ namespace Player
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Animator))]
+
     public class PlayerMovement : MonoBehaviour
     {
         [Header("Movement Vars")]

@@ -8,6 +8,7 @@ namespace Enemy
         [Header("Enemy")]
         [SerializeField] private GameObject _body;
         [SerializeField] private GameObject _skin;
+        [SerializeField] private GameObject _action;
 
         [Header("Movement Vars")]
         [SerializeField] private float _speed = 1f;
@@ -18,15 +19,19 @@ namespace Enemy
         private GameObject _collider;
         private Rigidbody2D _rb;
         private Animator _anim;
+        private Shooter _shooter;
         private Vector2 _scale;
 
         public const float IdleState = 0;
         public const float WalkState = 1;
         public const float StopState = 2;
+        public const float ActionState = 3;
+        public const float RevertState = 4;
 
         private static float _currentState;
         private float _currentTimeToRevert;
-        
+        private bool _isShooterNotNull;
+
         public static float CurrentState {
             get => _currentState;
             set => _currentState = value;
@@ -39,9 +44,11 @@ namespace Enemy
             _anim = _skin.GetComponent<Animator>();
             _scale = _skin.transform.localScale;
             _collider = GameObject.Find("Body/Collider");
+            _shooter = GetComponent<Shooter>();
         }
         private void Start()
         {
+            _isShooterNotNull = _shooter != null;
             _currentTimeToRevert = 0;
             _currentState = WalkState;
             Movement();
@@ -51,7 +58,12 @@ namespace Enemy
         {
             CheckState();
         }
+        private void FixedUpdate()
+        {
+            //CheckState();
+        }
 
+        // ReSharper disable Unity.PerformanceAnalysis
         private void CheckState()
         {
             switch (_currentState)
@@ -60,10 +72,8 @@ namespace Enemy
                     _currentTimeToRevert += Time.deltaTime;
                     if (_currentTimeToRevert >= _timeToRevert)
                     {
-                        FlipAxis();
-                        Movement();
                         _currentTimeToRevert = 0;
-                        _currentState = WalkState;
+                        _currentState = ActionState;
                     }
                     break;
                 case WalkState:
@@ -73,9 +83,25 @@ namespace Enemy
                     Stopping();
                     _currentState = IdleState;
                     break;
+                case ActionState:
+                    Action();
+                    _currentState = RevertState;
+                    break;
+                case RevertState:
+                    FlipAxis();
+                    Movement();
+                    _currentState = WalkState;
+                    break;
             }
         }
 
+        private void Action()
+        {
+            if (_isShooterNotNull)
+            {
+                _shooter.Shoot();
+            }
+        }
         private void Movement()
         {
             Vector2 _velocity = Vector2.right;
@@ -98,6 +124,7 @@ namespace Enemy
         {
             _scale.x *= -1;
             _skin.transform.localScale = _scale;
+            _action.transform.localScale = _scale;
             _collider.transform.localScale = _scale;
         }
     }

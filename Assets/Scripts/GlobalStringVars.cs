@@ -8,7 +8,7 @@ public class GlobalStringVars
     public const string FIRE_1 = "Fire1";
     
     public static string[] MortalTags = {"Player", "Character", "Mortal", "Enemy", "Live", "Alive"};
-    public static string[] BulletIgnoreTags = {"CameraConfiner", "Respawn"};
+    public static string[] BulletIgnoreTags = {"CameraConfiner", "Respawn", "Collider", "Trigger"};
 
     #endregion
 }

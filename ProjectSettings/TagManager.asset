@@ -9,6 +9,8 @@ TagManager:
   - Bullet
   - EnemyStopper
   - Ground
+  - Collider
+  - Trigger
   layers:
   - Default
   - TransparentFX
