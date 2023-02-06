@@ -1,3 +1,4 @@
+using Bullet;
 using UnityEngine;
 
 namespace Player
@@ -9,10 +10,8 @@ namespace Player
     public class PlayerMovement : MonoBehaviour
     {
         [Header("Movement Vars")]
-        [SerializeField]
-        private float _speed = 3;
-
         [SerializeField] private float _jumpForce = 5;
+        [SerializeField] private GameObject _bulletSpawn;
 
         [Header("Settings")]
         [SerializeField] private float _jumpOffset = 0.15f;
@@ -21,6 +20,7 @@ namespace Player
         [SerializeField] private GameObject _controlCollider;
         [SerializeField] private LayerMask _groundLayerMask;
 
+        private BulletSpawn _bulletSpawnScript;
         private Rigidbody2D _rb;
         private Animator _anim;
         private bool _isGrounded;
@@ -38,6 +38,8 @@ namespace Player
             _rb = GetComponent<Rigidbody2D>();
             _groundColliderRadius = _groundCollider.GetComponent<CircleCollider2D>().radius;
             _collisionRadius = _groundColliderRadius + _jumpOffset;
+            
+            _bulletSpawnScript = _bulletSpawn.GetComponent<BulletSpawn>();
         }
 
         private void Start()
@@ -48,7 +50,6 @@ namespace Player
         private void FixedUpdate()
         {
             CheckGrounded();
-
             _anim.SetBool("isJump", !_isGrounded);
         }
 
@@ -62,8 +63,6 @@ namespace Player
             bool overControl = Physics2D.OverlapCircle(posControl, _collisionRadius, _groundLayerMask); // Контрольная точка касается того же словя, скорее всего вертикальная стена
 
             _isGrounded = onGrounded || (overGrounded && !overControl);
-
-            //Debug.LogFormat($"Is Grounded: {_isGrounded} | {_collisionRadius}");
         }
 
         public void Move(float direction, bool isJump)
@@ -102,9 +101,9 @@ namespace Player
             if (
                 (!_isBackward && localScale.x < 0)
                 || (_isBackward && localScale.x > 0)
-            )
-            {
+            ) {
                 localScale.x *= -1;
+                _bulletSpawnScript.MovingForward = localScale.x > 0;
             }
 
             transform.localScale = localScale;

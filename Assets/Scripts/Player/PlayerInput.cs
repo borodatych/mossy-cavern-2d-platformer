@@ -1,31 +1,32 @@
+using Hero;
 using UnityEngine;
 
 namespace Player
 {
     [RequireComponent(typeof(PlayerMovement))]
-    [RequireComponent(typeof(Shooter))]
+    [RequireComponent(typeof(HeroShooter))]
 
     public class PlayerInput : MonoBehaviour
     {
         private PlayerMovement _playerMovement;
-        private Shooter _shooter;
+        private HeroShooter _heroShooter;
 
         private void Awake()
         {
             _playerMovement = GetComponent<PlayerMovement>();
-            _shooter = GetComponent<Shooter>();
+            _heroShooter = GetComponent<HeroShooter>();
         }
 
         private void Update()
         {
-            float horizontalDirection = Input.GetAxis(GlobalStringVars.HORIZONTAL_AXIS);
-            bool isJumpButtonPress = Input.GetButtonDown(GlobalStringVars.JUMP);
+            float horizontalDirection = Input.GetAxis(GlobalVars.HORIZONTAL_AXIS);
+            bool isJumpButtonPress = Input.GetButtonDown(GlobalVars.JUMP);
         
             _playerMovement.Move(horizontalDirection, isJumpButtonPress);
 
-            if (Input.GetButtonDown(GlobalStringVars.FIRE_1))
+            if (Input.GetButtonDown(GlobalVars.FIRE_1))
             {
-                _shooter.Shoot();
+                _heroShooter.Shoot();
             }
         }
     }

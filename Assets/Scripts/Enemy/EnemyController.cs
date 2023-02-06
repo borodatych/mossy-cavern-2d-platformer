@@ -1,4 +1,5 @@
-using DG.Tweening;
+using Bullet;
+using Hero;
 using UnityEngine;
 
 namespace Enemy
@@ -8,47 +9,45 @@ namespace Enemy
         [Header("Enemy")]
         [SerializeField] private GameObject _body;
         [SerializeField] private GameObject _skin;
-        [SerializeField] private GameObject _action;
+        [SerializeField] private GameObject _bulletSpawn;
 
         [Header("Movement Vars")]
         [SerializeField] private float _speed = 1f;
         [SerializeField] private float _timeToRevert = 3f;
-        [SerializeField] private float _jumpForce = 5;
-        [SerializeField] private float _jumpOffset = 0.15f;
 
-        private GameObject _collider;
         private Rigidbody2D _rb;
         private Animator _anim;
-        private Shooter _shooter;
-        private Vector2 _scale;
+        private HeroShooter _heroShooter;
+        private Vector2 _scale, _position;
+        
+        private Vector2 _bulletSpawnScale, _bulletSpawnPosition;
+        private BulletSpawn _bulletSpawnScript;
 
-        public const float IdleState = 0;
-        public const float WalkState = 1;
-        public const float StopState = 2;
-        public const float ActionState = 3;
-        public const float RevertState = 4;
+        public const int IdleState = 0, WalkState = 1, StopState = 2, ActionState = 3, RevertState = 4;
 
-        private static float _currentState;
+        private int _currentState;
         private float _currentTimeToRevert;
         private bool _isShooterNotNull;
 
-        public static float CurrentState {
+        public int CurrentState {
             get => _currentState;
             set => _currentState = value;
-            
         }
 
         private void Awake()
         {
             _rb = _body.GetComponent<Rigidbody2D>();
             _anim = _skin.GetComponent<Animator>();
-            _scale = _skin.transform.localScale;
-            _collider = GameObject.Find("Body/Collider");
-            _shooter = GetComponent<Shooter>();
+            _heroShooter = GetComponent<HeroShooter>();
+            
+            _scale = _body.transform.localScale;
+            _position = _body.transform.position;
+
+            _bulletSpawnScript = _bulletSpawn.GetComponent<BulletSpawn>();
         }
         private void Start()
         {
-            _isShooterNotNull = _shooter != null;
+            _isShooterNotNull = _heroShooter != null;
             _currentTimeToRevert = 0;
             _currentState = WalkState;
             Movement();
@@ -58,15 +57,11 @@ namespace Enemy
         {
             CheckState();
         }
-        private void FixedUpdate()
-        {
-            //CheckState();
-        }
 
         // ReSharper disable Unity.PerformanceAnalysis
         private void CheckState()
         {
-            switch (_currentState)
+            switch (CurrentState)
             {
                 case IdleState:
                     _currentTimeToRevert += Time.deltaTime;
@@ -99,7 +94,7 @@ namespace Enemy
         {
             if (_isShooterNotNull)
             {
-                _shooter.Shoot();
+                _heroShooter.Shoot();
             }
         }
         private void Movement()
@@ -123,9 +118,10 @@ namespace Enemy
         private void FlipAxis()
         {
             _scale.x *= -1;
-            _skin.transform.localScale = _scale;
-            _action.transform.localScale = _scale;
-            _collider.transform.localScale = _scale;
+            _body.transform.localScale = _scale;
+            _position.x *= -1;
+
+            _bulletSpawnScript.MovingForward = _scale.x > 0;
         }
     }
 }
