@@ -52,6 +52,7 @@ namespace Hero
             if (rbCurrentBullet != null)
             {
                 currentBullet.GetComponent<BulletTrigger>().IgnoreColliders = _childrenColliders;
+                currentBullet.GetComponent<HeroDamager>().IgnoreColliders = _childrenColliders;
 
                 int dir = _script.MovingForward ? 1 : -1;
                 rbCurrentBullet.velocity = new Vector2(_speed * dir, rbCurrentBullet.velocity.y);

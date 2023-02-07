@@ -20,6 +20,11 @@ namespace Hero
             _isAlive = true;
 
             _dieObjs = GetComponents(typeof(IDie));
+
+            if (_root == null)
+            {
+                _root = gameObject;
+            }
         }
 
         public void TakeDamage(float damage, bool instant)

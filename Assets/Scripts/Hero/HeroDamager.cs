@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hero
@@ -7,10 +8,21 @@ namespace Hero
     {
         [SerializeField] private float _damage;
         [SerializeField] private bool _instant;
+        private List<Collider2D> _ignoreColliders;
+
+        public List<Collider2D> IgnoreColliders {
+            get => _ignoreColliders;
+            set => _ignoreColliders = value;
+        }
+
+        private void Awake()
+        {
+            _ignoreColliders = new List<Collider2D>();
+        }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if ( ((IList) GlobalVars.MortalTags).Contains(collision.tag) )
+            if (!IsChildCollider(collision) && ((IList) GlobalVars.MortalTags).Contains(collision.tag))
             {
                 var root = collision.gameObject.GetComponent<HeroCollider>()?.Root 
                     ? collision.gameObject.GetComponent<HeroCollider>().Root 
@@ -18,16 +30,14 @@ namespace Hero
                 root.GetComponent<HeroHealth>()?.TakeDamage(_damage, _instant);
             }
         }
-
-        private void OnCollisionEnter2D(Collision2D collision)
+        private bool IsChildCollider(Collider2D collision)
         {
-            if ( ((IList) GlobalVars.MortalTags).Contains(collision.gameObject.tag) )
+            foreach (var t in IgnoreColliders)
             {
-                var root = collision.gameObject.GetComponent<HeroCollider>()?.Root 
-                    ? collision.gameObject.GetComponent<HeroCollider>().Root 
-                    : collision.gameObject;
-                root.GetComponent<HeroHealth>()?.TakeDamage(_damage, _instant);
+                if (collision.CompareTag(t.tag)) return true;
             }
+
+            return false;
         }
     }
 }
