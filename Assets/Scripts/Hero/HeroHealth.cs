@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Die;
@@ -14,6 +15,8 @@ namespace Hero
 
         private bool _isAlive;
         private Component[] _dieObjs;
+
+        public event Action<float> HealthChanged; 
 
         private void Awake()
         {
@@ -40,6 +43,7 @@ namespace Hero
             }
 
             Flash();
+            HealthEvent();
             CheckIsAlive();
         }
 
@@ -50,6 +54,11 @@ namespace Hero
             {
                 Die();
             }
+        }
+        private void HealthEvent()
+        {
+            float currentHealthAsPercentage = _currentHealth / _maxHealth;
+            HealthChanged?.Invoke(currentHealthAsPercentage);
         }
 
         private void Die()
