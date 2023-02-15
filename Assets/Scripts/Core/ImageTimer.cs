@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -76,7 +75,7 @@ namespace Core
         public void SetMaxTime(int value)
         {
             _maxTime = value;
-            if (_countDown) // Не нравится, но ХЗ как по другому
+            if (_countDown)
             {
                 _currentTime = value;
             }

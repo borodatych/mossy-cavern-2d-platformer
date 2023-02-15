@@ -5,18 +5,18 @@ namespace Enemy
 {
     public class EnemyTrigger : MonoBehaviour
     {
-        private EnemyController _controller;
+        private EnemyMovement _movement;
 
         private void Awake()
         {
-            _controller = gameObject.GetComponentInParent(typeof(EnemyController)) as EnemyController;
+            _movement = gameObject.GetComponentInParent(typeof(EnemyMovement)) as EnemyMovement;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (gameObject.name == "Wall_Forward" && ((IList) GlobalVars.EnemystopOnEnter).Contains(other.gameObject.tag))
+            if (gameObject.name == "Wall_Forward" && ((IList) GlobalVars.EnemyStopOnEnter).Contains(other.gameObject.tag))
             {
-                _controller.CurrentState = EnemyController.StopState;
+                _movement.CurrentState = EnemyMovement.StopState;
             }
         }
 
@@ -24,7 +24,7 @@ namespace Enemy
         {
             if (gameObject.name == "Ground_Forward" && other.CompareTag("Ground"))
             {
-                _controller.CurrentState = EnemyController.StopState;
+                _movement.CurrentState = EnemyMovement.StopState;
             }
         }
     }

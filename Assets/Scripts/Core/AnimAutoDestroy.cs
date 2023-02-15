@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Anim
+namespace Core
 {
     [RequireComponent(typeof(Animator))]
-    public class AnimationAutoDestroy : MonoBehaviour
+    public class AnimAutoDestroy : MonoBehaviour
     {
         [SerializeField] private float _delay = 0f;
  

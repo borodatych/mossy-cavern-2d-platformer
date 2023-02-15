@@ -8,7 +8,7 @@ namespace Die
 
         public GameObject Respawn
         {
-            // get => _respawn;
+            get => _respawn;
             set => _respawn = value;
         }
 

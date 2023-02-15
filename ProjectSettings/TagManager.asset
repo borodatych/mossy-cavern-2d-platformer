@@ -11,6 +11,7 @@ TagManager:
   - Ground
   - Collider
   - Trigger
+  - Limiter
   layers:
   - Default
   - TransparentFX

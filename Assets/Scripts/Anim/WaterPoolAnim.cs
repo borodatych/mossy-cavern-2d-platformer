@@ -18,9 +18,7 @@ namespace Anim
             
             _sequence.OnComplete(() =>
             {
-                // Debug.LogFormat($">> SlideIntoWall OnComplete");
                 Destroy(gameObject);
-                // callback();
             });
         }
     }

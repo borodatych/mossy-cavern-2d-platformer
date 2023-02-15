@@ -19,12 +19,12 @@ namespace Player
 
         private void Update()
         {
-            float horizontalDirection = Input.GetAxis(GlobalVars.HORIZONTAL_AXIS);
-            bool isJumpButtonPress = Input.GetButtonDown(GlobalVars.JUMP);
+            float horizontalDirection = Input.GetAxis(GlobalVars.HorizontalAxis);
+            bool isJumpButtonPress = Input.GetButtonDown(GlobalVars.Jump);
         
             _playerMovement.Move(horizontalDirection, isJumpButtonPress);
 
-            if (Input.GetButtonDown(GlobalVars.FIRE_1))
+            if (Input.GetButtonDown(GlobalVars.Fire1))
             {
                 _heroShooter.Shoot();
             }

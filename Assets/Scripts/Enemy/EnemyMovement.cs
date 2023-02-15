@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Enemy
 {
-    public class EnemyController : MonoBehaviour
+    public class EnemyMovement : MonoBehaviour
     {
         [Header("Enemy")]
         [SerializeField] private GameObject _body;

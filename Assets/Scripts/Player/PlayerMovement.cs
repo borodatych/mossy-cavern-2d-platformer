@@ -55,12 +55,18 @@ namespace Player
 
         private void CheckGrounded()
         {
+            /*
+             * Определение нахождения на земле:
+             * overGrounded - На земле с запасом (_jumpOffset)
+             * onGrounded - Строго на земле, что бы в углах не включалась анимация
+             */
             Vector2 posGround = _groundCollider.transform.position;
-            bool overGrounded = Physics2D.OverlapCircle(posGround, _collisionRadius, _groundLayerMask); // На земле с включенным запасом - _jumpOffset
-            bool onGrounded = Physics2D.OverlapCircle(posGround, _groundColliderRadius, _groundLayerMask); // Строго на земле, что бы в углах не включалась анимация
+            bool overGrounded = Physics2D.OverlapCircle(posGround, _collisionRadius, _groundLayerMask);
+            bool onGrounded = Physics2D.OverlapCircle(posGround, _groundColliderRadius, _groundLayerMask);
 
+            // Контрольная точка касается того же слоя - скорее всего вертикальная стена
             Vector2 posControl = _controlCollider.transform.position;
-            bool overControl = Physics2D.OverlapCircle(posControl, _collisionRadius, _groundLayerMask); // Контрольная точка касается того же словя, скорее всего вертикальная стена
+            bool overControl = Physics2D.OverlapCircle(posControl, _collisionRadius, _groundLayerMask);
 
             _isGrounded = onGrounded || (overGrounded && !overControl);
         }

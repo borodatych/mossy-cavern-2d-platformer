@@ -1,13 +1,13 @@
-public class GlobalVars
+public static class GlobalVars
 {
     #region Movement
-    public const string HORIZONTAL_AXIS = "Horizontal";
-    public const string VERTICAL_AXIS = "Vertical";
-    public const string JUMP = "Jump";
-    public const string FIRE_1 = "Fire1";
+    public const string HorizontalAxis = "Horizontal";
+    public const string VerticalAxis = "Vertical";
+    public const string Jump = "Jump";
+    public const string Fire1 = "Fire1";
     #endregion
     
-    public static string[] MortalTags = {"Player", "Character", "Mortal", "Enemy", "Live", "Alive"};
-    public static string[] BulletIgnoreTags = {"CameraConfiner", "Respawn", "Collider", "Trigger", "EnemyStopper"};
-    public static readonly string[] EnemystopOnEnter = {"Ground", "EnemyStopper"};
+    public static readonly string[] MortalTags = {"Player", "Character", "Mortal", "Enemy", "Live", "Alive"};
+    public static readonly string[] BulletIgnoreTags = {"CameraConfiner", "Respawn", "Collider", "Trigger", "EnemyStopper"};
+    public static readonly string[] EnemyStopOnEnter = {"Ground", "EnemyStopper"};
 }

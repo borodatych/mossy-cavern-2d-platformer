@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Die;
 using UnityEngine;
 
@@ -53,8 +54,9 @@ namespace Hero
 
         private void Die()
         {
-            foreach (IDie die in _dieObjs)
+            foreach (var component in _dieObjs)
             {
+                var die = (IDie)component;
                 die.AfterDeath();
             }
 
@@ -68,35 +70,36 @@ namespace Hero
             }
         }
 
-        IEnumerator FlashSprites(SpriteRenderer[] sprites, int numTimes, float delay, bool disable = false) {
-            // number of times to loop
-            for (int loop = 0; loop < numTimes; loop++) {            
-                // cycle through all sprites
-                for (int i = 0; i < sprites.Length; i++) {                
-                    if (disable) {
-                        // for disabling
+        private static IEnumerator FlashSprites(IReadOnlyList<SpriteRenderer> sprites, int numTimes, float delay, bool disable = false)
+        {
+            for (int loop = 0; loop < numTimes; loop++)
+            {            
+                for (int i = 0; i < sprites.Count; i++)
+                {                
+                    if (disable)
+                    {
                         sprites[i].enabled = false;
-                    } else {
-                        // for changing the alpha
+                    }
+                    else
+                    {
                         sprites[i].color = new Color(sprites[i].color.r, sprites[i].color.g, sprites[i].color.b, 0.5f);
                     }
                 }
  
-                // delay specified amount
                 yield return new WaitForSeconds(delay);
  
-                // cycle through all sprites
-                for (int i = 0; i < sprites.Length; i++) {
-                    if (disable) {
-                        // for disabling
+                for (int i = 0; i < sprites.Count; i++)
+                {
+                    if (disable)
+                    {
                         sprites[i].enabled = true;
-                    } else {
-                        // for changing the alpha
+                    }
+                    else
+                    {
                         sprites[i].color = new Color(sprites[i].color.r, sprites[i].color.g, sprites[i].color.b, 1);
                     }
                 }
  
-                // delay specified amount
                 yield return new WaitForSeconds(delay);
             }
         }

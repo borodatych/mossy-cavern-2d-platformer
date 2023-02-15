@@ -8,13 +8,13 @@ namespace Die
         [SerializeField] private GameObject[] _animObjects;
         public void AfterDeath()
         {
-            foreach(GameObject objet in _animObjects)
+            foreach(var objet in _animObjects)
             {
-                // objet.GetComponent<IAnim>()?.Play();
-                Component[] anims = objet.GetComponents(typeof(IAnim));
+                var anims = objet.GetComponents(typeof(IAnim));
 
-                foreach (IAnim anim in anims)
+                foreach (var component in anims)
                 {
+                    var anim = (IAnim)component;
                     anim.Play();
                 }
             }
