@@ -12,6 +12,7 @@ TagManager:
   - Collider
   - Trigger
   - Limiter
+  - Coin
   layers:
   - Default
   - TransparentFX

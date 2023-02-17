@@ -17,7 +17,7 @@ namespace Enemy
 
         private Rigidbody2D _rb;
         private Animator _anim;
-        private HeroShooter _heroShooter;
+        private Shooter _shooter;
         private Vector2 _scale, _position;
         
         private Vector2 _bulletSpawnScale, _bulletSpawnPosition;
@@ -38,7 +38,7 @@ namespace Enemy
         {
             _rb = _body.GetComponent<Rigidbody2D>();
             _anim = _skin.GetComponent<Animator>();
-            _heroShooter = GetComponent<HeroShooter>();
+            _shooter = GetComponent<Shooter>();
             
             _scale = _body.transform.localScale;
             _position = _body.transform.position;
@@ -47,7 +47,7 @@ namespace Enemy
         }
         private void Start()
         {
-            _isShooterNotNull = _heroShooter != null;
+            _isShooterNotNull = _shooter != null;
             _currentTimeToRevert = 0;
             _currentState = WalkState;
             Movement();
@@ -94,7 +94,7 @@ namespace Enemy
         {
             if (_isShooterNotNull)
             {
-                _heroShooter.Shoot();
+                _shooter.Shoot();
             }
         }
         private void Movement()

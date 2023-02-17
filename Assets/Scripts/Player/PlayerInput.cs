@@ -4,17 +4,17 @@ using UnityEngine;
 namespace Player
 {
     [RequireComponent(typeof(PlayerMovement))]
-    [RequireComponent(typeof(HeroShooter))]
+    [RequireComponent(typeof(Shooter))]
 
     public class PlayerInput : MonoBehaviour
     {
         private PlayerMovement _playerMovement;
-        private HeroShooter _heroShooter;
+        private Shooter _shooter;
 
         private void Awake()
         {
             _playerMovement = GetComponent<PlayerMovement>();
-            _heroShooter = GetComponent<HeroShooter>();
+            _shooter = GetComponent<Shooter>();
         }
 
         private void Update()
@@ -26,7 +26,7 @@ namespace Player
 
             if (Input.GetButtonDown(GlobalVars.Fire1))
             {
-                _heroShooter.Shoot();
+                _shooter.Shoot();
             }
         }
     }
